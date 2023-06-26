@@ -1,26 +1,44 @@
-import { RoundsList } from "@/components/rounds-list";
-import { EventProps } from "../page";
+import {
+  ParticipantImage,
+  ParticipantItem,
+  ParticipantName,
+  ParticipantsList,
+  RoundItem,
+  RoundTitle,
+  RoundsList,
+} from "@/components"
+import { EventProps, Round } from "@/shared/types"
 
 export default function Participants({ params }: EventProps) {
   return (
     <section className="font-sans">
-      <p className="text-neutral-500 text-xs underline leading-normal">
+      <p className="text-neutral-500 text-body-xs underline leading-normal">
         Code in The Dark {params.event}
       </p>
-      <h2 className="text-2xl text-neutral-900 leading-normal font-bold mt-0.5">
+      <h2 className="text-title-sm text-neutral-900 leading-normal font-bold mt-1">
         Gerenciar Chave
       </h2>
-      <RoundsList rounds={rounds} />
+      <RoundsList>
+        {rounds.map((round, index) => (
+          <RoundItem key={index}>
+            <RoundTitle>{index + 1}º Round</RoundTitle>
+            <ParticipantsList>
+              {round.participants.map((participant, index) => (
+                <ParticipantItem key={participant.id}>
+                  <ParticipantImage
+                    src={participant.avatarUrl}
+                    alt={`${participant.name} photo`}
+                    lined={index !== round.participants.length - 1}
+                  />
+                  <ParticipantName>{participant.name}</ParticipantName>
+                </ParticipantItem>
+              ))}
+            </ParticipantsList>
+          </RoundItem>
+        ))}
+      </RoundsList>
     </section>
-  );
-}
-export interface Participant {
-  id: number;
-  avatarUrl: string;
-  name: string;
-}
-export interface Round {
-  participants: Participant[];
+  )
 }
 
 const rounds: Round[] = [
@@ -120,4 +138,4 @@ const rounds: Round[] = [
       },
     ],
   },
-];
+]
